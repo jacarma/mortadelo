@@ -3,7 +3,7 @@
 Un agente de inteligencia artificial (IA) es un sistema que puede percibir su entorno a través de sensores, procesar esa información y luego realizar acciones para alcanzar objetivos específicos.
 Esto se basa en una comprensión del entorno y una toma de decisiones correspondiente, y puede incluir la capacidad de aprender de la experiencia.
 
-Mortadelo es una aplicación que utiliza GPT-3.5 y algunos plugins tener conversaciones y responder preguntas. Puede buscar en Google, usar la calculadora y mostrar su proceso de razonamiento.
+Mortadelo es una aplicación que utiliza GPT-3.5 y algunos plugins para tener conversaciones y responder preguntas. Puede buscar en Google, usar la calculadora y mostrar su proceso de razonamiento.
 Mortadelo piensa y habla en la lengua de Cervantes.
 
 He aquí un ejemplo:
