@@ -80,10 +80,12 @@ const answerQuestion = async (question) => {
     // add this to the prompt
     prompt += response;
 
-    const action = response.match(/Acción: (.*)/)?.[1];
+    const action = response.match(/Acción: (.*)/i)?.[1];
     if (action) {
       // execute the action specified by the LLMs
-      const actionInput = response.match(/Entrada de la acción: "?(.*)"?/)?.[1];
+      const actionInput = response.match(
+        /Entrada de la acción: "?(.*)"?/i
+      )?.[1];
       const result = await tools[action.trim()].execute(actionInput);
       console.log(
         "\x1b[90m" + `${action}(${actionInput}): ${result}` + "\x1b[0m"

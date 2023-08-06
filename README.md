@@ -1,44 +1,51 @@
-# 🦜️🔗 LangChain-mini 
+# Mortadelo 👓 El agente IA español
 
-This is a very simple re-implementation of [LangChain](https://github.com/hwchase17/langchain), in ~100 lines of code. In essence, it is an LLM (GPT-3.5) powered chat application that is able to use tools (Google search and a calculator) in order to hold conversations and answer questions. 
+Un agente de inteligencia artificial (IA) es un sistema que puede percibir su entorno a través de sensores, procesar esa información y luego realizar acciones para alcanzar objetivos específicos.
+Esto se basa en una comprensión del entorno y una toma de decisiones correspondiente, y puede incluir la capacidad de aprender de la experiencia.
 
-Here's an example:
+Mortadelo es una aplicación que utiliza GPT-3.5 y algunos plugins tener conversaciones y responder preguntas. Puede buscar en Google, usar la calculadora y mostrar su proceso de razonamiento.
+Mortadelo piensa y habla en la lengua de Cervantes.
 
-~~~
-Q: What is the world record for solving a rubiks cube?
-The world record for solving a Rubik's Cube is 4.69 seconds, held by Yiheng Wang (China).
-Q: Can a robot solve it faster?
-The fastest time a robot has solved a Rubik's Cube is 0.637 seconds.
-Q: Who made this robot?
-Infineon created the robot that solved a Rubik's Cube in 0.637 seconds.
-Q: What time would an average human expect for solving?
-It takes the average person about three hours to solve a Rubik's cube for the first time.
-~~~
+He aquí un ejemplo:
 
-This is not intended to be a replacement for LangChain, instead it was built for fun and educational purposes. If you're interested in how LangChain, and similar tools work, this is a good starting point.
+```
+Quién fue el primer ser humano en pisar la luna?
+Neil Armstrong fue el primer ser humano en pisar la luna en julio de 1969.
 
-For more information about this project, read the accompanying blogpost - [Re-implementing LangChain in 100 lines of code](https://blog.scottlogic.com/2023/05/04/langchain-mini.html)
+quien viajaba con él?
+Edwin F. Aldrin fue el segundo astronauta en acompañar a Neil Armstrong a la luna durante la misión Apolo 11.
 
-## Running / developing
+alguno más?
+La tripulación de la misión Apolo 11 consistió en Neil Armstrong, Buzz Aldrin, Michael Collins y el entonces presidente de los Estados Unidos, Richard Nixon.
 
-Install dependencies, and run (with node >= v18):
+seguro que nixon viajó a la luna?
+No, Richard Nixon no viajó a la luna durante la misión Apolo 11.
+```
 
-~~~
+_Muy muy listo todavía no es :D_
+
+## Cómo Ejecutar
+
+Clonar e instalar las dependencias
+
+```
+% git clone git@github.com:jacarma/mortadelo.git
+% cd mortadelo
 % npm install
-~~~
+```
 
-You'll need to have both an OpenAI and SerpApi keys. These can be supplied to the application via a `.env` file:
+Necesitarás tener las claves [OpenAI](https://openai.com/blog/openai-api) y [SerpApi](https://serpapi.com/). Estas pueden ser suministradas a la aplicación a través de un archivo `.env` como el siguiente:
 
-~~~
+```
 OPENAI_API_KEY="..."
 SERPAPI_API_KEY="..."
-~~~
+```
 
-You can now run the chain:
+Ejecutar Mortadelo:
 
-~~~
+```
 % node index.mjs
-How can I help? what was the name of the first man on the moon?
-Neil Armstrong
-~~~
+Como puedo ayudarte?
+```
 
+Este proyecto es un fork de [langchain-mini](https://github.com/ColinEberhardt/langchain-mini) una [reimplementación básica de Langchain en 100 líneas de código](https://blog.scottlogic.com/2023/05/04/langchain-mini.html)
