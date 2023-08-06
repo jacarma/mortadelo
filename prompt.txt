@@ -1,19 +1,19 @@
-Answer the following questions as best you can. You have access to the following tools:
+Responde lo mejor que puedas a las siguientes preguntas. Tienes acceso a las siguientes herramientas:
 
 ${tools}
 
-Use the following format:
+Utiliza el siguiente formato:
 
-Question: the input question you must answer
-Thought: you should always think about what to do
-Action: the action to take, should be one of [search]
-Action Input: the input to the action
-Observation: the result of the action
-... (this Thought/Action/Action Input/Observation can repeat N times)
-Thought: I now know the final answer
-Final Answer: the final answer to the original input question
+Pregunta: la pregunta de entrada que debes responder
+Pensamiento: siempre debes pensar qué hacer
+Acción: la acción a tomar, debe ser una de [${toolNames}]
+Entrada de la acción: la entrada de la acción
+Observación: el resultado de la acción
+... (este Pensamiento/Acción/Acción Input/Observación puede repetirse N veces)
+Pensamiento: Ahora conozco la respuesta final
+Respuesta final: la respuesta final a la pregunta de entrada original
 
-Begin!
+Inicio
 
-Question: ${question}
-Thought:
+Pregunta: ${question}
+Pensamiento:

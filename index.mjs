@@ -28,12 +28,12 @@ const googleSearch = async (question) =>
 const tools = {
   search: {
     description:
-      "a search engine. useful for when you need to answer questions about current events. input should be a search query.",
+      "un motor de búsqueda. útil para cuando se necesita responder a preguntas sobre la actualidad. la entrada debe ser una consulta de búsqueda.",
     execute: googleSearch,
   },
   calculator: {
     description:
-      "Useful for getting the result of a math expression. The input to this tool should be a valid mathematical expression that could be executed by a simple calculator.",
+      "Útil para obtener el resultado de una expresión matemática. La entrada a esta herramienta debe ser una expresión matemática válida que pueda ser ejecutada por una calculadora simple.",
     execute: (input) => Parser.evaluate(input).toString(),
   },
 };
@@ -52,14 +52,14 @@ const completePrompt = async (prompt) =>
       max_tokens: 256,
       temperature: 0.7,
       stream: false,
-      stop: ["Observation:"],
+      stop: ["Observación:"],
     }),
   })
     .then((res) => res.json())
     .then((res) => res.choices[0].text)
     .then((res) => {
-      console.log("\x1b[91m" + prompt + "\x1b[0m");
-      console.log("\x1b[92m" + res + "\x1b[0m");
+      // console.log("\x1b[90m" + prompt + "\x1b[0m");
+      console.log("\x1b[90m" + res + "\x1b[0m");
       return res;
     });
 
@@ -71,6 +71,7 @@ const answerQuestion = async (question) => {
       .map((toolname) => `${toolname}: ${tools[toolname].description}`)
       .join("\n")
   );
+  prompt = prompt.replace("${toolNames}", Object.keys(tools).join(", "));
 
   // allow the LLM to iterate until it finds a final answer
   while (true) {
@@ -79,14 +80,17 @@ const answerQuestion = async (question) => {
     // add this to the prompt
     prompt += response;
 
-    const action = response.match(/Action: (.*)/)?.[1];
+    const action = response.match(/Acción: (.*)/)?.[1];
     if (action) {
       // execute the action specified by the LLMs
-      const actionInput = response.match(/Action Input: "?(.*)"?/)?.[1];
+      const actionInput = response.match(/Entrada de la acción: "?(.*)"?/)?.[1];
       const result = await tools[action.trim()].execute(actionInput);
-      prompt += `Observation: ${result}\n`;
+      console.log(
+        "\x1b[90m" + `${action}(${actionInput}): ${result}` + "\x1b[0m"
+      );
+      prompt += `Observación: ${result}\n`;
     } else {
-      return response.match(/Final Answer: (.*)/)?.[1];
+      return response.match(/Respuesta final: (.*)/i)?.[1];
     }
   }
 };
@@ -96,13 +100,14 @@ const mergeHistory = async (question, history) => {
   const prompt = mergeTemplate
     .replace("${question}", question)
     .replace("${history}", history);
+  // console.log(prompt);
   return await completePrompt(prompt);
 };
 
 // main loop - answer the user's questions
 let history = "";
 while (true) {
-  let question = await rl.question("How can I help? ");
+  let question = await rl.question("Cómo puedo ayudarte? ");
   if (history.length > 0) {
     question = await mergeHistory(question, history);
   }

@@ -1,5 +1,5 @@
-Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question.
-Chat History:
+Dada la siguiente conversación y una pregunta de seguimiento, reformula la pregunta de seguimiento para que sea una pregunta independiente.
+Historial del chat:
 ${history}
-Follow Up Input: ${question}
-Standalone question:
+Pregunta de seguimiento: ${question}
+Pregunta independiente:
