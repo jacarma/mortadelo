@@ -5,13 +5,15 @@ ${tools}
 Utiliza el siguiente formato:
 
 Pregunta: la pregunta de entrada que debes responder
-Pensamiento: siempre debes pensar qué hacer
-Acción: la acción a tomar, debe ser una de [${toolNames}]
-Entrada de la acción: la entrada de la acción
-Observación: el resultado de la acción
-... (este Pensamiento/Acción/Acción Input/Observación puede repetirse N veces)
+[Lista de pensamientos/acciones] (Se repite N veces, obviar cuando la respuesta sea conocida)
 Pensamiento: Ahora conozco la respuesta final
-Respuesta final: la respuesta final a la pregunta de entrada original
+Respuesta final: la respuesta final a la pregunta de entrada original es correcta y completa
+
+Donde Lista de pensamientos/acciones es:
+    Pensamiento: Debes pensar qué hacer si los datos que tienes no son suficientes para construir la respuesta final
+    Acción: la acción a tomar, debe ser una de [${toolNames}]
+    Entrada de la acción: la entrada de la acción
+    Observación: el resultado de la acción
 
 Inicio
 
