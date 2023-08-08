@@ -9,20 +9,41 @@ Mortadelo piensa y habla en la lengua de Cervantes.
 He aquí un ejemplo:
 
 ```
-Quién fue el primer ser humano en pisar la luna?
-Neil Armstrong fue el primer ser humano en pisar la luna en julio de 1969.
+Cómo puedo ayudarte? Cual es el temario de cuarto curso de primaria en Valencia?
 
-quien viajaba con él?
-Edwin F. Aldrin fue el segundo astronauta en acompañar a Neil Armstrong a la luna durante la misión Apolo 11.
+No conozco el temario de cuarto curso de primaria en Valencia, por lo que necesitaré buscar esa información en Internet.
+Acción: search
+Entrada de la acción: "temario cuarto curso primaria Valencia"
+search(temario cuarto curso primaria Valencia"): Áreas · Servicio de Ordenación Académica · Organismos · Portales · Normativa - Ed. Secundaria · Distribución de las horas lectivas semanales de la ESO.
 
-alguno más?
-La tripulación de la misión Apolo 11 consistió en Neil Armstrong, Buzz Aldrin, Michael Collins y el entonces presidente de los Estados Unidos, Richard Nixon.
+Pensamiento: El resultado de la búsqueda no fue satisfactorio, necesito buscar nuevamente.
+Acción: search
+Entrada de la acción: "temario cuarto curso primaria Valencia distribución de las horas lectivas semanales"
+search(temario cuarto curso primaria Valencia distribución de las horas lectivas semanales"): Distribución de las horas lectivas · Programa de diversificación curricular · Organización y funcionamiento de centros · Evaluación, promoción y titulación ...
 
-seguro que nixon viajó a la luna?
-No, Richard Nixon no viajó a la luna durante la misión Apolo 11.
+Pensamiento: Aunque esta información se refiere a la ESO, puedo inferir que el temario de cuarto curso de primaria en Valencia incluirá asignaturas similares. Sin embargo, todavía necesito más detalles sobre las materias específicas.
+Acción: search
+Entrada de la acción: "materias cuarto curso primaria Valencia"
+search(materias cuarto curso primaria Valencia"): Decreto 108/2014, de 4 de julio, del Consell, por el que establece el currículo y desarrolla la ordenación general de la educación primaria en la Comunitat ...
+
+Pensamiento: El decreto mencionado podría contener la información que necesito sobre las materias de cuarto curso de primaria en Valencia.
+Acción: search
+Entrada de la acción: "Decreto 108/2014 materias cuarto curso primaria Valencia"
+search(Decreto 108/2014 materias cuarto curso primaria Valencia"): DECRETO 108/2014, de 4 de julio, del Consell, por el que ... la educación primaria en la Comunitat Valenciana. [2014/6347]. Preàmbul.
+
+Respuesta final: Según el Decreto 108/2014 del Consell de la Comunitat Valenciana, el temario de cuarto curso de primaria en Valencia incluye las siguientes materias:
+
+- Matemáticas
+- Valenciano
+- Lengua castellana
+- Ciencias Naturales
+- Ciencias Sociales
+- Educación Física
+- Religión o Valores Sociales y Cívicos
+- Música
+- Plástica y Visual
+- Inglés
 ```
-
-_Muy muy listo todavía no es :D_
 
 ## Cómo Ejecutar
 
