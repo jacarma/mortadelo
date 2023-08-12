@@ -4,7 +4,7 @@ ${tools}
 
 Utiliza el siguiente formato:
 
-Pregunta: la pregunta de entrada que debes responder
+Objetivo principal: la pregunta de entrada que debes responder
 [Lista de pensamientos/acciones] (Se repite N veces, obviar cuando la respuesta sea conocida)
 Pensamiento: Ahora conozco la respuesta final
 Respuesta final: la respuesta final a la pregunta de entrada original es correcta y completa
@@ -17,5 +17,5 @@ Donde Lista de pensamientos/acciones es:
 
 Inicio
 
-Pregunta: ${question}
+Objetivo principal: ${question}
 Pensamiento:

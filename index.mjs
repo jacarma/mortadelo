@@ -2,41 +2,24 @@ import env from "dotenv";
 env.config();
 
 import fs from "fs";
-import { Parser } from "expr-eval";
 import * as readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
+import path from "node:path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const rl = readline.createInterface({ input, output });
 
 const promptTemplate = fs.readFileSync("prompt.txt", "utf8");
 const mergeTemplate = fs.readFileSync("merge.txt", "utf8");
 
-// use serpapi to answer the question
-const googleSearch = async (question) =>
-  await fetch(
-    `https://serpapi.com/search?api_key=${process.env.SERPAPI_API_KEY}&q=${question}`
-  )
-    .then((res) => res.json())
-    .then(
-      (res) =>
-        // try to pull the answer from various components of the response
-        res.answer_box?.answer ||
-        res.answer_box?.snippet ||
-        res.organic_results?.[0]?.snippet
-    );
-
-// tools that can be used to answer questions
-const tools = {
-  search: {
-    description:
-      "un motor de búsqueda. útil para cuando se necesita responder a preguntas sobre la actualidad. la entrada debe ser una consulta de búsqueda.",
-    execute: googleSearch,
-  },
-  calculator: {
-    description:
-      "Útil para obtener el resultado de una expresión matemática. La entrada a esta herramienta debe ser una expresión matemática válida que pueda ser ejecutada por una calculadora simple.",
-    execute: (input) => Parser.evaluate(input).toString(),
-  },
-};
+const toolsPath = path.join(__dirname, "tools");
+const tools = await Promise.all(
+  fs
+    .readdirSync(toolsPath)
+    .map((file) => import(path.join(toolsPath, file)).then((m) => m.default))
+);
 
 // use GPT-3.5 to complete a given prompts
 const completePrompt = async (prompt) =>
@@ -62,13 +45,13 @@ const completePrompt = async (prompt) =>
 
 const answerQuestion = async (question) => {
   // construct the prompt, with our question and the tools that the chain can use
-  let prompt = promptTemplate.replace("${question}", question).replace(
-    "${tools}",
-    Object.keys(tools)
-      .map((toolname) => `${toolname}: ${tools[toolname].description}`)
-      .join("\n")
-  );
-  prompt = prompt.replace("${toolNames}", Object.keys(tools).join(", "));
+  let prompt = promptTemplate
+    .replace("${question}", question)
+    .replace(
+      "${tools}",
+      tools.map(({ name, description }) => `${name}: ${description}`).join("\n")
+    );
+  prompt = prompt.replace("${toolNames}", tools.map((t) => t.name).join(", "));
 
   // allow the LLM to iterate until it finds a final answer
   while (true) {
@@ -83,9 +66,8 @@ const answerQuestion = async (question) => {
       const actionInput = response.match(
         /Entrada de la acción: "?(.*)"?/i
       )?.[1];
-      const result = tools[action.trim()]
-        ? await tools[action.trim()].execute(actionInput)
-        : "n/a";
+      const tool = tools.find((t) => t.name === action.trim());
+      const result = tool ? await tool.execute(actionInput) : "n/a";
       console.log(
         "\x1b[90m" + `${action}(${actionInput}): ${result}` + "\x1b[0m"
       );
