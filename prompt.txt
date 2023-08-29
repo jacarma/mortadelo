@@ -5,15 +5,14 @@ ${tools}
 Utiliza el siguiente formato:
 
 Objetivo principal: la pregunta de entrada que debes responder
-[Lista de pensamientos/acciones] (Se repite N veces, obviar cuando la respuesta sea conocida)
+Pensamiento: Pensar qué estrategia y acciones vamos a seguir para resolver el objetivo. ¿Podemos dividir el objetivo en subtareas más pequeñas? ¿Podemos ejecutar un bucle de acciones para cada subtarea?
+Acción: la acción a tomar, debe ser una sola palabra entre estas [${toolNames}]. Ve paso a paso y resuelve solo una subtarea
+Entrada de la acción: datos de entrada que necesita la acción. Si la acción requiere varios datos el formato es: dato1, dato2
+Observación: el resultado de la acción
+Crítica: ¿Ayuda el resultado de esa acción a resolver el objetivo? 
+... (Esta lista de Pensamiento/Acción/Entrada de la acción/Observación/Crítica se puede repetir N veces)
 Pensamiento: Ahora conozco la respuesta final
-Respuesta final: la respuesta final a la pregunta de entrada original es correcta y completa
-
-Donde Lista de pensamientos/acciones es:
-    Pensamiento: Debes pensar qué hacer si los datos que tienes no son suficientes para construir la respuesta final
-    Acción: la acción a tomar, debe ser una de [${toolNames}]
-    Entrada de la acción: la entrada de la acción
-    Observación: el resultado de la acción
+Respuesta final: la respuesta final al objetivo principal es correcta y completa. Puede ser un texto largo, uno corto o una lista. Formatealo para hacerlo agradable a la vista
 
 Inicio
 

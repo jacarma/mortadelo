@@ -1,5 +1,14 @@
-Dada la siguiente conversación y una pregunta de seguimiento, reformula la pregunta de seguimiento para que sea una pregunta independiente.
+Combina el historial de chat y la pregunta de seguimiento en una pregunta independiente.
+
+Reglas:
+- La respuesta correcta a la pregunta independiente es la misma que la de la pregunta de seguimiento.
+- La pregunta independiente contiene todos los datos del chat relevantes para entender la pregunta.
+- Quien responda a la pregunta independiente no tendrá acceso al historial de chat.
+
 Historial del chat:
 ${history}
-Pregunta de seguimiento: ${question}
-Pregunta independiente:
+
+Pregunta de seguimiento: 
+${question}
+
+Pregunta independiente: 

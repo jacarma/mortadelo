@@ -6,6 +6,8 @@ Esto se basa en una comprensión del entorno y una toma de decisiones correspond
 Mortadelo es una aplicación que utiliza GPT-3.5 y algunos plugins para tener conversaciones y responder preguntas. Puede buscar en Google, usar la calculadora y mostrar su proceso de razonamiento.
 Mortadelo piensa y habla en la lengua de Cervantes.
 
+Puedes pedirle cosas como traducir y resumir archivos de texto locales o direcciones web. Incluso si son pdfs.
+
 He aquí un ejemplo:
 
 ```
@@ -65,8 +67,8 @@ SERPAPI_API_KEY="..."
 Ejecutar Mortadelo:
 
 ```
-% node index.mjs
+% npm run mortadelo
 Como puedo ayudarte?
 ```
 
-Este proyecto es un fork de [langchain-mini](https://github.com/ColinEberhardt/langchain-mini) una [reimplementación básica de Langchain en 100 líneas de código](https://blog.scottlogic.com/2023/05/04/langchain-mini.html)
+Este proyecto comenzó como un fork de [langchain-mini](https://github.com/ColinEberhardt/langchain-mini) una [reimplementación básica de Langchain en 100 líneas de código](https://blog.scottlogic.com/2023/05/04/langchain-mini.html)
