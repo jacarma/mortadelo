@@ -1,76 +1,81 @@
 import fs from "fs";
 import { MAX_TOKENS, TOKENS_PER_WORD, gptBig, promptProps } from "../openai";
-import { addToFileName, readFile } from "../utils/file-utils";
-import {
-  countWords,
-  firstPhrase,
-  lastPhrase,
-  lastPhrases,
-} from "../utils/text-utils";
-import { logError } from "../utils/logs";
+import { addToFileName } from "../utils/file-utils";
+import { countWords, isTitle, lastPhrases } from "../utils/text-utils";
+import { debug, logError } from "../utils/logs";
+import { generateToc } from "./tabla-de-contenidos";
 
-const MAX_WORDS_PER_BLOCK = MAX_TOKENS / TOKENS_PER_WORD / 4;
+const MAX_WORDS = MAX_TOKENS / TOKENS_PER_WORD / 2;
 
-const SYS_P1 = ({
-  context,
-  numBlock,
-  totalBlocks,
-  filePath,
-  prevBlockSummary,
-}: promptProps) => `
-Eres una máquina de reescribir libros y artículos. 
-Para cada página que recibas vas a devolver una versión de unas ${Math.floor(
-  countWords(context.toString()) / 3
+const SYS_P1 = ({ context, wordFactor }: promptProps) => `
+Eres un ghostwriter. 
+Cada vez que el escritor te mande un texto debes reescribirlo en unas ${Math.floor(
+  Math.ceil(countWords(context.toString()) * +wordFactor)
 )} palabras y en español. 
 
 Reglas:
-- Conserva la estructura de secciones y subsecciones. 
-- Mantén todos los títulos y subtítulos con sus números y pesos.
-- No descartes el texto anterior a la primera sección.
 - Utiliza la misma voz y tono que el autor de la página original.
-- Todos los elementos de las enumeraciones de la página original también pueden encontrarse en tu versión.
-- No añadas contenido que no esté en la página original.
-
-La primera página que vas a recibir es la número ${numBlock} de un total de ${totalBlocks} obtenida de "${filePath}"
-
-${
-  parseInt(numBlock) > 1
-    ? `Final de la página anterior: """\n${prevBlockSummary}\n"""`
-    : ""
-}
-
+- Todos los elementos de las enumeraciones de la página original también deben encontrarse en tu versión.
+- Responde solo con el texto reescrito.
+- No saludes ni te despidas.
 `;
-
-// Para hacerlo primero extraerás la estructura de la página y luego reescribirás cada sección.
-//- Prohibido usar: "este artículo", "esta página", "en resumen", "por lo que se recomienda"
-// La primera frase del resumen debe ser: """
-// ${firstPhrase(context.toString())}
-// """
-
-// La última frase del resumen debe ser: """
-// ${lastPhrase(context.toString())}
-// """
-
-// - La página puede ser extraída de una web o pdf automáticamente. Elimina el contenido que no sea relevante (sidebars, contenido promocional, etc.)
-// - No añadas introducción ni cierre.
-// - No añadas conclusiones al final, termina el resumen igual que termina la página original.
-// - La página original será sustituida por el resumen por lo que debe ser coherente con la anterior y siguiente.
-// - La primera frase del resumen coincide con la primera frase de la página original.
-// - La última frase del resumen coincide con la última frase de la página original.
 
 const USER_P1 = ({ context, prevBlockSummary, numBlock }: promptProps) =>
   lastPhrases(prevBlockSummary.toString()) + context.toString();
 
-export const summarize = async (filePath: string) => {
-  const fileContent = await readFile(filePath);
+export const summarizeBySections = async (filePath: string) => {
+  const { toc, sections, titles, fileWords } = await generateToc(filePath);
+  const wordFactor = Math.min(1 / 3, MAX_WORDS / +fileWords);
+  const TOC = toc
+    .split("\n")
+    .map((s: string) => ({ text: s.replace(/^[\d\.\s-]+/, ""), pointer: -1 }));
+  const summarizedBlocks: string[] = [];
 
-  const summarizedBlocks = await gptBig(
-    { sys: SYS_P1, user: USER_P1 },
-    { context: fileContent, filePath },
-    "prevBlockSummary",
-    undefined
-    // { temperature: 0.1 }
-  );
+  let lastPointer = -1;
+  for (let TOCPointer = 0; TOCPointer < TOC.length; TOCPointer++) {
+    for (
+      let sectionPointer = lastPointer + 1;
+      sectionPointer < sections.length;
+      sectionPointer++
+    ) {
+      if (
+        isTitle(sections[sectionPointer]) &&
+        sections[sectionPointer]
+          .toLowerCase()
+          .includes(TOC[TOCPointer].text.toLowerCase())
+      ) {
+        TOC[TOCPointer].pointer = sectionPointer;
+        lastPointer = sectionPointer;
+        break;
+      }
+    }
+  }
+  for (let i = TOC.length - 1; i >= 0; i--) {
+    let originalTitlePosition = TOC[i].pointer;
+    if (originalTitlePosition === -1) {
+      debug(`No se ha encontrado el título ${TOC[i].text}`);
+      continue;
+    }
+    const remain = sections.length - originalTitlePosition;
+    const sectionContent = sections
+      .splice(originalTitlePosition, remain)
+      .join("\n\n");
+    const sectionSummary = (
+      await gptBig(
+        { sys: SYS_P1, user: USER_P1 },
+        {
+          context: sectionContent,
+          filePath,
+          wordFactor: wordFactor.toString(),
+        },
+        "prevBlockSummary",
+        undefined
+        // { temperature: 0.1 }
+      )
+    ).join("\n\n");
+    summarizedBlocks.unshift(sectionSummary);
+    summarizedBlocks.unshift(TOC[i].text);
+  }
 
   const summary = summarizedBlocks.join("\n\n");
   let content = summary;
@@ -78,7 +83,7 @@ export const summarize = async (filePath: string) => {
   const newFile = addToFileName(filePath, `-RESUMEN`);
   await fs.writeFileSync(newFile, summary);
 
-  while (countWords(content) > MAX_WORDS_PER_BLOCK) {
+  while (countWords(content) > MAX_WORDS) {
     console.log("Resumiendo más...");
     content = (
       await gptBig(
@@ -98,7 +103,7 @@ export default {
     "resume un archivo o una página web. Requiere la ruta del archivo o la url de la web.",
   execute: async (input: string) => {
     try {
-      return await summarize(input);
+      return await summarizeBySections(input);
     } catch (e) {
       logError(e);
       return `ERROR: ${(e as Error).message}`;

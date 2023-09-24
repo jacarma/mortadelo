@@ -131,7 +131,6 @@ export const gptBig = async (
     const ps = typeof prompts === "function" ? { user: prompts } : prompts;
     try {
       const response = await gpt(ps.user(ctx), gptOptions, ps.sys?.(ctx));
-      // console.log({ sys: ps.sys?.(ctx), response, user: ps.user(ctx) });
       debug({
         numBlock: responses.length + 1,
         original: block, //firstPhrase(block),

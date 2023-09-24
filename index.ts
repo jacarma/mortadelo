@@ -115,9 +115,6 @@ const main = async () => {
   let history = "";
   while (true) {
     let question = await rl.question("Cómo puedo ayudarte? ");
-    if (!question)
-      question =
-        "lee test.txt y extrae una lista con todas las librerías de react que se mencionen";
     if (history.length > 0) {
       question = await mergeHistory(question, history);
     }

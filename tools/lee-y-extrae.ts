@@ -3,7 +3,7 @@ import { parseArguments } from "../utils/text-utils";
 import { last } from "../utils/collection-utils";
 import { readFile } from "../utils/file-utils";
 import { logError } from "../utils/logs";
-import resume, { summarize } from "./resume";
+import { summarizeBySections } from "./resume";
 
 // const P1 = ({ question, context }: promptProps) => `
 // Del siguiente contexto extrae aquel que podría servir para responder a la pregunta.
@@ -65,7 +65,7 @@ export default {
   execute: async (input: string) => {
     try {
       const args = parseArguments(input);
-      if (args.length === 1) return await summarize(input);
+      if (args.length === 1) return await summarizeBySections(input);
       if (args.length === 2) return await investigate(args[0], args[1]);
       parseArguments(input, [
         "ruta-de-archivo-o-url",

@@ -56,7 +56,6 @@ export const addToFileName = (filePath: string, suffix: string) => {
 };
 
 export const readPdf = async (filePath: string) => {
-  // console.log("reading pdf", filePath);
   const isOnline = filePath.startsWith("http");
   const localPath = isOnline
     ? "./" + filePath.replace(/\W/g, "") + ".pdf"
@@ -67,7 +66,6 @@ export const readPdf = async (filePath: string) => {
     await download(filePath, localPath);
   }
   let dataBuffer = fs.readFileSync(localPath);
-  //   console.log(dataBuffer.length);
   const pdfObject = await pdf(dataBuffer);
   return pdfObject.text;
 };

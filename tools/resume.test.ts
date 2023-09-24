@@ -11,13 +11,16 @@ describe("resume", () => {
     expect(resume.execute).toBeTruthy();
   });
 
-  it.only("summarizes and writes the summary to file", async () => {
-    (readFile as jest.Mock).mockResolvedValue("word\n".repeat(MAX_WORDS + 1));
+  it("summarizes and writes the summary to file", async () => {
+    (readFile as jest.Mock).mockResolvedValue(sampleFile);
     (addToFileName as jest.Mock).mockImplementation(
       jest.requireActual("../utils/file-utils").addToFileName
     );
-    mockFetchGptOk("summary1");
+    mockFetchGptOk(`Tabla de contenido:
+    SECCIÓN 1
+    SECCIÓN 2`);
     mockFetchGptOk("summary2");
+    mockFetchGptOk("summary1");
     const writeFileSync = jest.fn();
     jest.spyOn(fs, "writeFileSync").mockImplementation(writeFileSync);
 
@@ -25,11 +28,18 @@ describe("resume", () => {
       "http://example.com/very-interesting-article"
     );
 
-    expect(writeFileSync).toHaveBeenCalledWith(
+    expect(writeFileSync).toHaveBeenLastCalledWith(
       "./httpexamplecomveryinterestingarticle-RESUMEN.txt",
-      "summary1\n\nsummary2"
+      "SECCIÓN 1\n\nsummary1\n\nSECCIÓN 2\n\nsummary2"
     );
-    const expectation = `ÉXITO: se ha almacenado el archivo ./httpexamplecomveryinterestingarticle-RESUMEN.txt. El contenido es: summary1\n\nsummary2`;
+    const expectation = `ÉXITO: se ha almacenado el archivo ./httpexamplecomveryinterestingarticle-RESUMEN.txt. El contenido es: SECCIÓN 1\n\nsummary1\n\nSECCIÓN 2\n\nsummary2`;
     expect(result).toEqual(expectation);
   });
 });
+
+const sampleFile = `
+SECCIÓN 1
+Esto es un párrafo
+
+SECCIÓN 2
+Esto es otro párrafo`;
