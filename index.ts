@@ -56,7 +56,7 @@ const main = async () => {
       const response = await answerPrompt(prompt);
 
       const regex = new RegExp(
-        `^(Pensamiento|Acción|Entrada de la acción)[ \\d]*:`,
+        `^\s*(Pensamiento|Acción|Entrada de la acción)[ \\d]*:`,
         "gmi"
       );
       const resAsArray = ("Pensamiento: " + response)
@@ -83,12 +83,11 @@ const main = async () => {
         const previousAction = actionHistory.find(
           (a) => a.action === action && a.actionInput === actionInput
         );
-        if (previousAction) {
-          return previousAction.result;
-        }
 
         const tool = tools.find((t) => t.name === action.trim());
-        const result = tool
+        const result = previousAction
+          ? previousAction.result
+          : tool
           ? await tool.execute(actionInput)
           : `ERROR: la Acción "${action}" no existe. Debe ser una de: ${tools
               .map((t) => t.name)
